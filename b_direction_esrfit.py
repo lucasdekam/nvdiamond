@@ -64,7 +64,7 @@ def Bmagvstheta_shift(theta, R0, th0):
   return mu0*m/(4*np.pi*(R-R0)**3) * np.sqrt(3*np.cos(theta-th0)**2 + 1)
 
 # Load data and split into arrays
-data = np.loadtxt('angledata_adapted.txt')
+data = np.loadtxt('angledata_adapted_for_esrfit.txt')
 theta_pts = data[:,0] # angle of points at which we measured, deg
 theta_pts = np.array([x*np.pi/180 for x in theta_pts]) - th0 # convert to rad, include correction theta0
 peak_freqs = data[:,1:9] # GHz
@@ -103,8 +103,6 @@ Bxprime_extr = Bmag_extracted*np.sin(Btheta_extracted)*np.cos(Bphi_extracted)
 Bz_extr = Bzprime_extr*np.cos(theta_pts) - Byprime_extr*np.sin(theta_pts)
 By_extr = Bzprime_extr*np.sin(theta_pts) + Byprime_extr*np.cos(theta_pts)
 Bx_extr = Bxprime_extr # no rotation
-print(Btheta_extracted*180/np.pi)
-print(Bphi_extracted*180/np.pi)
 
 # Locations of the diamond in the frame of the magnet
 zpts = R*np.cos(theta_pts)
