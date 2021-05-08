@@ -1,0 +1,5 @@
+Fit results
+Peak amplitudes
+Peak centers (GHz)
+Peak widths (GHz)
+Peak contrasts

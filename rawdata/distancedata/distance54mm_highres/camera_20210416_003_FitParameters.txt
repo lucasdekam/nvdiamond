@@ -1,0 +1,5 @@
+Fit results	Peak 1	Peak 2	Peak 3	Peak 4
+Peak amplitudes	-0.24(3)e06	-0.17(3)e06	-0.17(3)e06	-0.26(3)e06
+Peak centers (GHz)	2.7868(7)	2.803(1)	2.955(1)	2.9681(8)
+Peak widths (GHz)	0.006(1)	0.006(2)	0.005(2)	0.006(1)
+Peak contrasts	0.021(2)	0.015(2)	0.015(3)	0.023(2)
