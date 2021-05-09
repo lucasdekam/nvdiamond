@@ -84,7 +84,7 @@ nrows = peak_freqs.shape[0]
 
 for i in range(0, nrows):
     result = least_squares(ESR_freqs,
-                           x0=np.array([guesses_mag[i], guesses_theta[i], np.pi/2]),
+                           x0=np.array([guesses_mag[i], guesses_theta[i], 3*np.pi/2]),
                            bounds=([0,0,0], [np.inf, np.pi, 2*np.pi]),
                            args=(peak_freqs[i,:],),
                            loss='linear',
@@ -100,17 +100,18 @@ Byprime_extr = Bmag_extracted*np.sin(Btheta_extracted)*np.sin(Bphi_extracted)
 Bxprime_extr = Bmag_extracted*np.sin(Btheta_extracted)*np.cos(Bphi_extracted)
 
 # Apply rotation matrix to get B-field in the frame of the magnet
-Bz_extr = Bzprime_extr*np.cos(theta_pts) - Byprime_extr*np.sin(theta_pts)
-By_extr = Bzprime_extr*np.sin(theta_pts) + Byprime_extr*np.cos(theta_pts)
+Bz_extr = Bzprime_extr*np.cos(theta_pts) + Byprime_extr*np.sin(theta_pts)
+By_extr = - Bzprime_extr*np.sin(theta_pts) + Byprime_extr*np.cos(theta_pts)
 Bx_extr = Bxprime_extr # no rotation
 
 # Locations of the diamond in the frame of the magnet
+phi_pts = 3*np.pi/2
 zpts = R*np.cos(theta_pts)
-ypts = R*np.sin(theta_pts)
+ypts = R*np.sin(theta_pts)*np.sin(phi_pts)
 
 # Calculate theoretical B-field lines
 z = np.linspace(-2e-2, 5e-2, 20) # -10 to 0 cm
-y = np.linspace(-2e-2, 4e-2, 20) # -5 to 5 cm
+y = np.linspace(-4e-2, 2e-2, 20) # -5 to 5 cm
 Z, Y = np.meshgrid(z,y) # coordinates meshgrid
 Rmag = np.sqrt(Z**2 + Y**2) # distance to origin (meshgrid)
 rz = Z/Rmag # unit vector x-component (meshgrid)
@@ -125,22 +126,9 @@ plt.figure(figsize=(6,4))
 plt.streamplot(Z*1e2, Y*1e2, Bz_th*1e3, By_th*1e3, density=0.75, minlength=0.3, color=(0.8, 0.8, 0.8), zorder=0)
 plt.quiver(zpts*1e2, ypts*1e2, Bz_extr*1e3, By_extr*1e3, width=0.005, color='k', zorder=5, label='measured field')
 plt.xlabel(r'$z$ [cm]'), plt.ylabel(r'$y$ [cm]')
-plt.xlim([-1, 5]), plt.ylim([0, 4])
-plt.legend()
+plt.xlim([-1, 5]), plt.ylim([-4, 0])
+plt.yticks(np.arange(-4, 1), np.arange(-4, 1))
 plt.tight_layout()
-
-# plt.figure(figsize=(4,3))
-# plt.streamplot(Z*1e2, Y*1e2, Bz_th*1e3, By_th*1e3, density=0.75, minlength=0.3, color=(0.8, 0.8, 0.8), zorder=0)
-# plt.quiver(zpts*1e2, ypts*1e2, Bz_extr*1e3, By_extr*1e3, width=0.005, color='k', zorder=5, label='measured field')
-# plt.xlabel(r'$z$ [cm]'), plt.ylabel(r'$y$ [cm]')
-# plt.xlim([-1, 5]), plt.ylim([0, 4])
-# # plt.legend()
-# plt.subplots_adjust(top=0.93,
-#     bottom=0.2,
-#     left=0.215,
-#     right=0.95,
-#     hspace=0.2,
-#     wspace=0.2)
 
 plt.figure(figsize=(4,3))
 plt.plot(theta_pts*180/np.pi, Bx_extr*1e3, 'k.')
